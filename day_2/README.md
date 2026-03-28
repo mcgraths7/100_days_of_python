@@ -14,4 +14,3 @@ Here is a list of things I added which were not in the tutorial, but figured mig
 
 1. Code splitting
 2. Encapsulating logic into functions for better readability
-3. Decorators (probably could be accomplished with a helper function but I like the syntax of decorators)
