@@ -5,7 +5,7 @@ Today was more about the basics:
 2. Range
 3. Code blocks
 
-## Day 2 capstone
+## Day 5 capstone
 The project for today was a rudimentary password generator
 
 ### Above and beyond

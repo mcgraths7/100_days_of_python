@@ -1,4 +1,4 @@
-# Day 2
+# Day 3
 
 Today was more about the basics:
 1. conditionals
@@ -6,7 +6,7 @@ Today was more about the basics:
 3. code blocks
 4. scope
 
-## Day 2 capstone
+## Day 3 capstone
 The project for today was treasure island (which i rebranded pirate adventure). It is a text based 
 "choose your own adventure" 
 

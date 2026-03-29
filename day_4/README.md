@@ -4,7 +4,7 @@ Today was more about the basics:
 1. Lists
 2. Randomization
 
-## Day 2 capstone
+## Day 4 capstone
 The project for today was rock paper scissors. Using random.choice, generate the opponents move and compare to yours
 
 ### Above and beyond
