@@ -1,4 +1,4 @@
-# Day 2
+# Day 2 - 03/26/2026
 
 Today was more about the basics:
 1. data types

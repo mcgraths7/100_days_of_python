@@ -1,4 +1,4 @@
-# Day 3
+# Day 3 - 03/27/2026
 
 Today was more about the basics:
 1. conditionals

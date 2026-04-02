@@ -1,4 +1,4 @@
-# Day 8
+# Day 8 - 03/30/2026
 
 Today was more about functions:
 1. function parameters vs arguments

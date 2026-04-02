@@ -1,4 +1,4 @@
-# Day 4
+# Day 4 - 03/28/2026
 
 Today was more about the basics:
 1. Lists
