@@ -1,6 +1,14 @@
+import os
 import random
 
 from src.utils.input_helpers import get_input
+
+file_name = "wagers.txt"
+starting_balance = 1000
+
+if not os.path.exists(file_name):
+    with open(file_name, "w") as f:
+        f.write(f"{starting_balance}\n")
 
 starting_deck = [
     "2",
@@ -110,15 +118,54 @@ def calculate_total(hand):
 
 
 def create_game_state(deck):
+    with open(file_name, "r") as f:
+        lines = f.readlines()
+
+    lines = [line.strip() for line in lines if line.strip()]
+
+    balance = int(float(lines[-1]))
+    print(f"Balance from last session: {balance}")
     return {
         "deck": shuffle(deck),
         "player_hand": [],
         "dealer_hand": [],
+        "current_wager": 0,
+        "balance": balance,
+        "has_blackjack": False,
     }
 
 
 def reset_hands(state):
-    return {"deck": state["deck"], "player_hand": [], "dealer_hand": []}
+    return {
+        "deck": state["deck"],
+        "player_hand": [],
+        "dealer_hand": [],
+        "current_wager": state["current_wager"],
+        "balance": state["balance"],
+        "has_blackjack": state["has_blackjack"],
+    }
+
+
+def get_wager(state):
+    wager = get_input(
+        f"How much would you like to bet? (Available balance: {state['balance']})\n>>> $",
+        cast=int,
+        choices=range(1, state["balance"]),
+    )
+
+    return {
+        "deck": state["deck"],
+        "player_hand": state["player_hand"],
+        "dealer_hand": state["dealer_hand"],
+        "current_wager": wager,
+        "balance": state["balance"] - wager,
+        "has_blackjack": state["has_blackjack"],
+    }
+
+
+def write_balance(state):
+    with open(file_name, "w") as f:
+        f.write(f"{state['balance']}\n")
 
 
 def continue_playing():
@@ -139,6 +186,9 @@ def hit_player(state):
         "deck": new_deck,
         "player_hand": new_hand,
         "dealer_hand": state["dealer_hand"],
+        "current_wager": state["current_wager"],
+        "balance": state["balance"],
+        "has_blackjack": state["has_blackjack"],
     }
 
 
@@ -149,6 +199,9 @@ def hit_dealer(state):
         "deck": new_deck,
         "player_hand": state["player_hand"],
         "dealer_hand": new_hand,
+        "current_wager": state["current_wager"],
+        "balance": state["balance"],
+        "has_blackjack": state["has_blackjack"],
     }
 
 
@@ -159,6 +212,9 @@ def hit(state, player):
             "deck": shuffle(starting_deck),
             "player_hand": state["player_hand"],
             "dealer_hand": state["dealer_hand"],
+            "current_wager": state["current_wager"],
+            "balance": state["balance"],
+            "has_blackjack": state["has_blackjack"],
         }
 
     if player == "player":
@@ -167,6 +223,38 @@ def hit(state, player):
         state = hit_dealer(state)
 
     return state
+
+
+def wager(state, amount):
+    return {
+        "deck": state["deck"],
+        "player_hand": state["player_hand"],
+        "dealer_hand": state["dealer_hand"],
+        "current_wager": amount,
+        "balance": state["balance"] - amount,
+        "has_blackjack": state["has_blackjack"],
+    }
+
+
+def add_winnings(state, winner, has_blackjack):
+    if winner == "player":
+        winnings = state["current_wager"] * 1.5
+        print(f"You won ${winnings:.2f}")
+    elif winner == "dealer":
+        winnings = 0
+        print("You lost your wager")
+    else:
+        winnings = state["current_wager"]
+        print("You get your wager back")
+
+    return {
+        "deck": state["deck"],
+        "player_hand": state["player_hand"],
+        "dealer_hand": state["dealer_hand"],
+        "current_wager": int(state["current_wager"]),
+        "balance": state["balance"] + winnings,
+        "has_blackjack": has_blackjack,
+    }
 
 
 def player_turn(state):
@@ -241,7 +329,7 @@ def format_hand(hand, is_dealer=False, initial_deal=True):
     return [
         "?" if idx == 0 and is_dealer and initial_deal else card
         for idx, card in enumerate(hand)
-    ]  # List composition
+    ]
 
 
 def print_hand(hand, is_dealer=False, initial_deal=True):
@@ -262,14 +350,18 @@ def check_blackjack(state):
 
     if player_bj and not dealer_bj:
         print("Blackjack! You win!")
-        return True
+        state = add_winnings(state, "player", True)
+        write_balance(state)
     if dealer_bj and not player_bj:
         print("Dealer has blackjack. You lose!")
-        return True
+        state = add_winnings(state, "dealer", True)
+        write_balance(state)
     if dealer_bj and player_bj:
         print("Both players have blackjack! It's a draw.")
+        state = add_winnings(state, None, True)
+        write_balance(state)
 
-    return False
+    return state
 
 
 # # # # # # # # #
@@ -279,7 +371,11 @@ def check_blackjack(state):
 
 def game_loop(state):
 
-    if check_blackjack(state):
+    state = get_wager(state)
+
+    state = check_blackjack(state)
+
+    if state["has_blackjack"]:
         return state
 
     state, result = player_turn(state)
@@ -294,10 +390,14 @@ def game_loop(state):
 
     if winner == "player":
         print("You win!")
+
     elif winner == "dealer":
         print("You lose!")
     else:
         print("Push (tie).")
+
+    state = add_winnings(state, winner, False)
+    write_balance(state)
 
     return state
 
