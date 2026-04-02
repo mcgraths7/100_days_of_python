@@ -1,4 +1,4 @@
-# Day 1
+# Day 1 - 03/26/2026
 
 Today was all about the basics:
 1. printing to the console

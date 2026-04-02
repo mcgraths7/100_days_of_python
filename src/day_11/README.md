@@ -1,4 +1,4 @@
-# Day 11
+# Day 11 - 04/02/2026
 
 Today was all about bringing it all together:
 
@@ -10,6 +10,7 @@ The project for today was building a blackjack game
 2. Players take turns hitting until they stay or bust
 3. If over 21, bust
 4. Dealer will hit until soft 17 is hit
+5. After winner is declared, user prompted to play again or quit
 
 ## Above and beyond
 1. For this one I have built a "fair" deck, where there are only 52 cards, and if you keep playing over and over again, eventually you will have to reshuffle a new deck into the current one.

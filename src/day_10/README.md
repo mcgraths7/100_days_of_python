@@ -1,4 +1,4 @@
-# Day 10
+# Day 10 - 03/30/2026
 
 Today was all about functions with outputs:
 1. returning data from functions

@@ -1,4 +1,4 @@
-# Day 9
+# Day 9 - 03/30/2026
 
 Today was all about dictionaries:
 1. dictionaries
